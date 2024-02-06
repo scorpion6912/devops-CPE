@@ -194,3 +194,7 @@ Contrary to a classic build which will juste take and keep all the resources fro
 ### 1-4 Document your docker-compose file.
 
 we use 3 services with 1 network and a volume for the database. Each service is link to a dockerfile, a context, a network and also if necessary a dependence. 
+
+# Part 2 - github Actions
+
+The first step is to create the `.github/workflows` repository and make sur that the maven tests are ok on the simple-api-student-main folder.
