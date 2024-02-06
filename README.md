@@ -356,6 +356,7 @@ on:
 jobs:
  # define job to build and publish docker image
   build-and-push-docker-image:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     # run only when code is compiling and tests are passing
     runs-on: ubuntu-22.04
 
@@ -406,6 +407,12 @@ To be more accurate, this is this code that does that :
     branches:
       - master
 ```
+
+Also this line : `if: ${{ github.event.workflow_run.conclusion == 'success' }}`
+
+this line says that only succesfull tests can trigger the push on dockerHub, if the tests are completed but not successfull, the push will be skipped
+
+![alt text](./images/image4.png)
 
 ![alt text](./images/image3.png)
 
