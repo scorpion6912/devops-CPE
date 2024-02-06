@@ -198,3 +198,34 @@ we use 3 services with 1 network and a volume for the database. Each service is 
 # Part 2 - github Actions
 
 The first step is to create the `.github/workflows` repository and make sur that the maven tests are ok on the simple-api-student-main folder.
+
+Then we must fill out the main.yml file : 
+
+```yml
+name: CI devops 2023
+on:
+  #to begin you want to launch this job in main and develop
+  push:
+    branches: [master, develop] 
+  pull_request:
+
+jobs:
+  test-backend: 
+    runs-on: ubuntu-22.04
+    steps:
+     #checkout your github code using actions/checkout@v2.5.0
+      - uses: actions/checkout@v2.5.0
+
+     #do the same with another action (actions/setup-java@v3) that enable to setup jdk 17
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: 'temurin'
+
+     #finally build your app with the latest command
+      - name: Build and test with Maven
+        run: mvn clean verify --file simple-api-student-main/pom.xml
+```
+After pushing on git, we can see that all tests are ok ! 
+![alt text](./images/image.png)

@@ -5,7 +5,6 @@ services:
     container_name: simpleapistud
     build:
       context: ./simple-api-student-main
-      dockerfile: java.dockerfile
     networks:
       - tp1
     depends_on:
@@ -22,7 +21,6 @@ services:
   httpd:
     build:
       context: ./http
-      dockerfile: http.dockerfile
     ports:
       - "80:80"
     networks:
