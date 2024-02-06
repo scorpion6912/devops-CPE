@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  backend:
+    container_name: simpleapistud
+    build:
+      context: ./simple-api-student-main
+      dockerfile: java.dockerfile
+    networks:
+      - tp1
+    depends_on:
+      - database
+
+  database:
+    container_name: tp1bdd
+    build: ./
+    networks:
+      - tp1
+    volumes:
+      - db:/var/lib/postgresql/data
+
+  httpd:
+    build:
+      context: ./http
+      dockerfile: http.dockerfile
+    ports:
+      - "80:80"
+    networks:
+      - tp1
+    depends_on:
+      - backend
+
+networks:
+  tp1:
+
+volumes:
+  db:
