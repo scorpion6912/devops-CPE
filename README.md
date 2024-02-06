@@ -197,6 +197,8 @@ we use 3 services with 1 network and a volume for the database. Each service is 
 
 # Part 2 - github Actions
 
+## CI
+
 The first step is to create the `.github/workflows` repository and make sur that the maven tests are ok on the simple-api-student-main folder.
 
 Then we must fill out the main.yml file : 
@@ -229,3 +231,53 @@ jobs:
 ```
 After pushing on git, we can see that all tests are ok ! 
 ![alt text](./images/image.png)
+
+
+## CD
+
+Next step is to pusblish on dockerHub, we must change the main.yml to adatpt to that and create 2 secrets in our docker repository 
+
+```yml
+  # define job to build and publish docker image
+  build-and-push-docker-image:
+    needs: test-backend
+    # run only when code is compiling and tests are passing
+    runs-on: ubuntu-22.04
+
+    # steps to perform in job
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2.5.0
+
+      - name: Login to DockerHub
+        run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build image and push backend
+        uses: docker/build-push-action@v3
+        with:
+          # relative path to the place where source code with Dockerfile is located
+          context: ./simple-api-student-main
+          # Note: tags has to be all lower-case
+          tags: ${{secrets.DOCKERHUB_USERNAME}}/tp2-devops-simple-api-student-main:latest
+          # build on feature branches, push only on main branch
+          push: ${{ github.ref == 'refs/heads/master' }}
+
+      - name: Build image and push database
+        uses: docker/build-push-action@v3
+        with:
+          context: ./dataBase
+
+          tags: ${{secrets.DOCKERHUB_USERNAME}}/tp2-devops-database:latest
+          push: ${{ github.ref == 'refs/heads/master' }}
+
+      - name: Build image and push httpd
+        uses: docker/build-push-action@v3
+        with:
+          context: ./http
+
+          tags: ${{secrets.DOCKERHUB_USERNAME}}/tp2-devops-http-front:latest
+          push: ${{ github.ref == 'refs/heads/master' }}
+```
+
+After pushing, we can see that everithing is ok ! 
+![alt text](./images/image2.png)
