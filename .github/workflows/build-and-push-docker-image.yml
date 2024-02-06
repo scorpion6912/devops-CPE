@@ -1,13 +1,13 @@
 name: build-and-push-docker-image
+
 on:
-  #to begin you want to launch this job in master and develop
-  push:
-    branches: [master] 
   workflow_run:
     workflows:
       - test-backend
     types:
       - completed
+    branches:
+      - master
 
 jobs:
  # define job to build and publish docker image
