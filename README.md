@@ -237,6 +237,10 @@ After pushing on git, we can see that all tests are ok !
 
 Next step is to pusblish on dockerHub, we must change the main.yml to adatpt to that and create 2 secrets in our docker repository 
 
+![alt text](./images/imageSecret.png)
+
+then we modify the main.yml
+
 ```yml
   # define job to build and publish docker image
   build-and-push-docker-image:
@@ -278,6 +282,8 @@ Next step is to pusblish on dockerHub, we must change the main.yml to adatpt to 
           tags: ${{secrets.DOCKERHUB_USERNAME}}/tp2-devops-http-front:latest
           push: ${{ github.ref == 'refs/heads/master' }}
 ```
+
+In this code, we specify each step to push our containers in dockerhub to have a continuous deployement. Of course this is only possible if our tests passed. After the login, we push each image independently using our secrets keys defined before. 
 
 After pushing, we can see that everithing is ok ! 
 ![alt text](./images/image2.png)

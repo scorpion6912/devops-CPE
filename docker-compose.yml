@@ -12,7 +12,7 @@ services:
 
   database:
     container_name: tp1bdd
-    build: ./
+    build: ./dataBase
     networks:
       - tp1
     volumes:
