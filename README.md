@@ -281,3 +281,19 @@ Next step is to pusblish on dockerHub, we must change the main.yml to adatpt to 
 
 After pushing, we can see that everithing is ok ! 
 ![alt text](./images/image2.png)
+
+## Sonar
+
+After creating the acount and adding our github project, we must create a SONAR_TOKEN in the github secrets
+
+then there a line to modify in our main.yml : 
+
+` run: mvn -B verify sonar:sonar -Dsonar.projectKey=scorpion6912_devops-CPE -Dsonar.organization=scorpion6912 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}  --file ./simple-api-student-main/pom.xml`
+
+then push the changes : 
+
+![alt text](./images/imageSonar.png)
+
+At the end, we can have defferents reports in Sonar on our project
+
+![alt text](./images/imageSonarHealth.png)
