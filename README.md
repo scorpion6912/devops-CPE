@@ -394,7 +394,18 @@ jobs:
           push: ${{ github.ref == 'refs/heads/master' }}
 
 ```
-Here we are making sure that our deployement into docker hub only happend when a push is on master AND the backend tests passed. 
+Here we are making sure that our deployement into docker hub only happend when a push is on master AND the backend tests are completed. 
+
+To be more accurate, this is this code that does that : 
+```yml
+  workflow_run:
+    workflows:
+      - test-backend
+    types:
+      - completed
+    branches:
+      - master
+```
 
 ![alt text](./images/image3.png)
 
