@@ -197,6 +197,9 @@ we use 3 services with 1 network and a volume for the database. Each service is 
 
 # Part 2 - github Actions
 
+## What are testcontainers?
+These are lightweight libraries with API for completing integration tests with services wrapped in Docker containers
+
 ## CI
 
 The first step is to create the `.github/workflows` repository and make sur that the maven tests are ok on the simple-api-student-main folder.
