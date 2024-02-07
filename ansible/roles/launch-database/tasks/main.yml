@@ -6,7 +6,7 @@
     - name: networkDevops
     image: scorpion6912/tp2-devops-database:latest
     env:
-      password: "{{ password }}"
-      username: "{{ username }}"
-      db: "{{ db }}"
-      url: "{{ url }}"
+      password: "{{ POSTGRES_PASSWORD }}"
+      username: "{{ POSTGRES_USER }}"
+      db: "{{ POSTGRES_DB }}"
+      url: "{{ URL }}"
