@@ -6,4 +6,5 @@
     - name: networkDevops
     ports:
     - "80:80"
+    - "8080:8080"
     image:  scorpion6912/tp2-devops-http-front

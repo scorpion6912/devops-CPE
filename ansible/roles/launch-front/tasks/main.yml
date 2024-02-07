@@ -1,0 +1,6 @@
+- name: Run Front
+  community.docker.docker_container:
+    name: frontend
+    networks:
+    - name: networkDevops
+    image:  scorpion6912/tp2-devops-frontend

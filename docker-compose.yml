@@ -32,9 +32,18 @@ services:
       context: ./http
     ports:
       - "80:80"
+      - "8080:8080"
     networks:
       - tp1
     depends_on:
+      - frontend
+
+  frontend: 
+    build:
+      context: ./devops-front-main
+    networks:
+      - tp1
+    deponds_on:
       - backend
 
 networks:

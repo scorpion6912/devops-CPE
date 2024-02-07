@@ -507,6 +507,68 @@ ansible-galaxy init roles/launch-app
 ansible-galaxy init roles/launch-proxy
 ```
 
+We also must update our setup.yml : 
+```yml
+all:
+ vars:
+   ansible_user: centos
+   ansible_ssh_private_key_file: ~/.ssh/id_rsa
+   URL: "tp1bdd:5432"
+   POSTGRES_USER: "usr"
+   POSTGRES_PASSWORD: "pwd"
+   POSTGRES_DB: "db"
+ children:
+   prod:
+     hosts: remy.david.takima.cloud
+```
+
+then we must modify our tasks files for every role to work as intended : 
+
+```yml
+- name: Create network
+  community.docker.docker_network:
+    name: networkDevops
+    state: present
+```
+
+```yml
+- name: Run backend
+  community.docker.docker_container:
+    name: simpleapistud
+    networks:
+    - name: networkDevops
+    image: scorpion6912/tp2-devops-simple-api-student-main
+    env:
+      password: "{{ POSTGRES_PASSWORD }}"
+      username: "{{ POSTGRES_USER }}"
+      db: "{{ POSTGRES_DB }}"
+      url: "{{ URL }}"
+```
+
+```yml
+- name: Run DB
+  community.docker.docker_container:
+    name: tp1bdd
+    networks:
+    - name: networkDevops
+    image: scorpion6912/tp2-devops-database:latest
+    env:
+      password: "{{ POSTGRES_PASSWORD }}"
+      username: "{{ POSTGRES_USER }}"
+      db: "{{ POSTGRES_DB }}"
+      url: "{{ URL }}"
+```
+
+```yml
+- name: Run HTTPD
+  community.docker.docker_container:
+    name: httpd-1
+    networks:
+    - name: networkDevops
+    ports:
+    - "80:80"
+    image:  scorpion6912/tp2-devops-http-front
+```
 Finally, it's working as intended : 
 
 ![alt text](./images/imageAPIPlaybook.png)
