@@ -43,7 +43,7 @@ services:
       context: ./devops-front-main
     networks:
       - tp1
-    deponds_on:
+    depends_on:
       - backend
 
 networks:
