@@ -1,0 +1,29 @@
+name: CICD
+on:
+  workflow_run:
+    workflows:
+      - build-and-push-docker-image
+    types:
+      - completed
+    branches:
+      - master
+
+jobs:
+  ansible:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v2.5.0
+      - name: Run playbook
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          # Required, playbook filepath
+          playbook: ./ansible
+          # Optional, directory where playbooks live
+          directory: ./
+          # Optional, SSH private key
+          key: ${{secrets.SSH_PRIVATE_KEY}}
+          # Optional, literal inventory file contents
+          inventory: |
+            [all]
+            centos@remy.david.takima.cloud
