@@ -417,3 +417,96 @@ this line says that only succesfull tests can trigger the push on dockerHub, if 
 ![alt text](./images/image3.png)
 
 We can see here that our test is launched after the succes of the bakend tests. So we have successfully split our pipeline
+
+# Partie 3 Ansible
+
+```yml
+all:
+ vars:
+   ansible_user: centos
+   ansible_ssh_private_key_file: ~/.ssh/id_rsa
+ children:
+   prod:
+     hosts: remy.david.takima.cloud
+```
+
+![alt text](./images/imageAnsible.png)
+
+With the first playbook we have this result : 
+
+![alt text](./images/imagePlaybook.png)
+
+With the secound one the result is the following image : 
+
+![alt text](./images/imagePlaybook2.png)
+
+then we create a docker role : 
+
+![alt text](./images/imageRole.png)
+
+After creating the role, we have to modify the main.yml in the task folder for the role named docker : 
+
+```yml
+- name: Install device-mapper-persistent-data
+  yum:
+    name: device-mapper-persistent-data
+    state: latest
+
+- name: Install lvm2
+  yum:
+    name: lvm2
+    state: latest
+
+- name: add repo docker
+  command:
+    cmd: sudo yum-config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
+
+- name: Install Docker
+  yum:
+    name: docker-ce
+    state: present
+
+- name: Install python3
+  yum:
+    name: python3
+    state: present
+
+- name: Install docker with Python 3
+  pip:
+    name: docker
+    executable: pip3
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+
+- name: Make sure Docker is running
+  service: name=docker state=started
+  tags: docker
+
+```
+
+and the new playbook : 
+```yml
+- hosts: all
+  gather_facts: false
+  become: true
+
+  roles:
+  - docker
+```
+
+Here is the result : 
+
+![alt text](./images//result.png)
+
+Then, we create roles : 
+```bash
+ansible-galaxy init roles/install-docker
+ansible-galaxy init roles/create-network
+ansible-galaxy init roles/launch-database
+ansible-galaxy init roles/launch-app
+ansible-galaxy init roles/launch-proxy
+```
+
+Finally, it's working as intended : 
+
+![alt text](./images/imageAPIPlaybook.png)

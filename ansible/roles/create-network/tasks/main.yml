@@ -1,0 +1,5 @@
+
+- name: Create network
+  community.docker.docker_network:
+    name: networkDevops
+    state: present

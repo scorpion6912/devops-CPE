@@ -9,6 +9,11 @@ services:
       - tp1
     depends_on:
       - database
+    environment: 
+      - URL=tp1bdd:5432
+      - USERNAME=usr
+      - PASSWORD=pwd
+      - DB=db
 
   database:
     container_name: tp1bdd
@@ -17,6 +22,10 @@ services:
       - tp1
     volumes:
       - db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=db
+      - POSTGRES_USER=usr
+      - POSTGRES_PASSWORD=pwd
 
   httpd:
     build:

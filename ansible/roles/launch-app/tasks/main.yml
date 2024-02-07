@@ -1,0 +1,12 @@
+
+- name: Run backend
+  community.docker.docker_container:
+    name: simpleapistud
+    networks:
+    - name: networkDevops
+    image: scorpion6912/tp2-devops-simple-api-student-main
+    env:
+      password: "{{ password }}"
+      username: "{{ username }}"
+      db: "{{ db }}"
+      url: "{{ url }}"

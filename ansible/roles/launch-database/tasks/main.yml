@@ -1,0 +1,12 @@
+
+- name: Run DB
+  community.docker.docker_container:
+    name: tp1bdd
+    networks:
+    - name: networkDevops
+    image: scorpion6912/tp2-devops-database:latest
+    env:
+      password: "{{ password }}"
+      username: "{{ username }}"
+      db: "{{ db }}"
+      url: "{{ url }}"

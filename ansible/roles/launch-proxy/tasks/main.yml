@@ -1,0 +1,9 @@
+
+- name: Run HTTPD
+  community.docker.docker_container:
+    name: httpd-1
+    networks:
+    - name: networkDevops
+    ports:
+    - "80:80"
+    image:  scorpion6912/tp2-devops-http-front
