@@ -2,11 +2,13 @@
 - name: Run backend
   community.docker.docker_container:
     name: simpleapistud
+    pull: true
+    recreate: true
     networks:
     - name: networkDevops
     image: scorpion6912/tp2-devops-simple-api-student-main
     env:
-      password: "{{ POSTGRES_PASSWORD }}"
-      username: "{{ POSTGRES_USER }}"
-      db: "{{ POSTGRES_DB }}"
-      url: "{{ URL }}"
+      PASSWORD: "{{ POSTGRES_PASSWORD }}"
+      USERNAME: "{{ POSTGRES_USER }}"
+      DB: "{{ POSTGRES_DB }}"
+      URL: "{{ URL }}"

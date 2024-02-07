@@ -1,6 +1,8 @@
 - name: Run Front
   community.docker.docker_container:
     name: frontend
+    pull: true
+    recreate: true
     networks:
     - name: networkDevops
     image:  scorpion6912/tp2-devops-frontend

@@ -572,3 +572,89 @@ then we must modify our tasks files for every role to work as intended :
 Finally, it's working as intended : 
 
 ![alt text](./images/imageAPIPlaybook.png)
+
+## Frontend
+
+Here we have to add another container docker to handle our front end, first things first let's create another role in our ansible : launch-front 
+
+Also, we must add a task :
+
+```yml
+- name: Run Front
+  community.docker.docker_container:
+    name: frontend
+    pull: true
+    recreate: true
+    networks:
+    - name: networkDevops
+    image:  scorpion6912/tp2-devops-frontend
+```
+
+also modify our playbook : 
+
+```yml
+- hosts: all
+  gather_facts: false
+  become: true
+
+  roles:
+    - install-docker
+    - create-network
+    - launch-database
+    - launch-app
+    - launch-proxy
+    - launch-front
+```
+
+We need to modify our docker-compose too : 
+
+```yml
+  frontend: 
+    build:
+      context: ./devops-front-main
+    networks:
+      - tp1
+    depends_on:
+      - backend
+```
+
+The next step is to add the new container into our CI/CD : 
+
+```yml
+      - name: Build image and push frontend
+        uses: docker/build-push-action@v3
+        with:
+          context: ./devops-front-main
+
+          tags: ${{secrets.DOCKERHUB_USERNAME}}/tp2-devops-frontend:latest
+          push: ${{ github.ref == 'refs/heads/master' }}
+```
+Then we have to modify our proxy : 
+
+```
+<VirtualHost *:80>
+    ServerName localhost
+    ProxyPreserveHost On
+    ProxyPass / http://frontend:80/
+    ProxyPassReverse / http://frontend:80/
+</VirtualHost>
+
+Listen 8080
+<VirtualHost *:8080>
+    ServerName localhost
+    ProxyPreserveHost On
+    ProxyPass / http://simpleapistud:8080/
+    ProxyPassReverse / http://simpleapistud:8080/
+</VirtualHost>
+
+LoadModule proxy_module modules/mod_proxy.so
+LoadModule proxy_http_module modules/mod_proxy_http.so
+```
+
+The last step is to modify our prod environement in the frontend folder : 
+
+`VUE_APP_API_URL=remy.david.takima.cloud:8080`
+
+At the end, our front end is connected to the API : 
+
+![alt text](./images/front.png)

@@ -2,6 +2,8 @@
 - name: Run HTTPD
   community.docker.docker_container:
     name: httpd-1
+    pull: true
+    recreate: true
     networks:
     - name: networkDevops
     ports:
