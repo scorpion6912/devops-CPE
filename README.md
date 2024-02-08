@@ -661,4 +661,14 @@ At the end, our front end is connected to the API :
 
 # CICD Ansible
 
-WIP
+We have to do another github workflow to deploy our app with ansible : 
+
+```yml
+
+```
+
+Here is the result : 
+
+
+
+It's working !!
