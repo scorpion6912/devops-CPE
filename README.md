@@ -705,3 +705,5 @@ Here is the result :
 ![alt text](./images/resultAnsible.png)
 
 It's working !!
+
+The vault part is not done, it was not working sooo it's not present here
