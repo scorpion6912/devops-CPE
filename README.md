@@ -658,3 +658,7 @@ The last step is to modify our prod environement in the frontend folder :
 At the end, our front end is connected to the API : 
 
 ![alt text](./images/front.png)
+
+# CICD Ansible
+
+WIP

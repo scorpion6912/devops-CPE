@@ -1,29 +1,34 @@
-name: CICD
+name: CICD ansible
+
 on:
   workflow_run:
     workflows:
-      - build-and-push-docker-image
+      - Build and push docker image
     types:
-      - completed
+      - completed 
     branches:
-      - master
+      - main
 
 jobs:
-  ansible:
+  deploy-to-ansible:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-22.04
+
     steps:
-      - uses: actions/checkout@v2.5.0
-      - name: Run playbook
-        uses: dawidd6/action-ansible-playbook@v2
-        with:
-          # Required, playbook filepath
-          playbook: ./tpGlobal/ansible/playbook.yml
-          # Optional, directory where playbooks live
-          directory: ./
-          # Optional, SSH private key
-          key: ${{secrets.SSH_PRIVATE_KEY}}
-          # Optional, literal inventory file contents
-          inventory: |
-            [all]
-            centos@remy.david.takima.cloud
+      - name: Checkout code
+        uses: actions/checkout@v2.5.0
+
+      - name: Install Python + Pip + Ansible
+        run: sudo apt install python3-pip && sudo apt install ansible
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H remy.david.takima.cloud >> ~/.ssh/known_hosts
+          echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+        env:
+          SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
+
+      - name: Deploy application
+        run: ansible-playbook -i ./ansible/inventories/setup.yml ./ansible/playbook.yml
