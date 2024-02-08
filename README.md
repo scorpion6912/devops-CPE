@@ -664,11 +664,44 @@ At the end, our front end is connected to the API :
 We have to do another github workflow to deploy our app with ansible : 
 
 ```yml
+name: CICD ansible
 
+on:
+  workflow_run:
+    workflows:
+      - build-and-push-docker-image
+    types:
+      - completed 
+    branches:
+      - master
+
+jobs:
+  deploy-to-ansible:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2.5.0
+
+      - name: Install Python + Pip + Ansible
+        run: sudo apt install python3-pip && sudo apt install ansible
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H remy.david.takima.cloud >> ~/.ssh/known_hosts
+          echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+        env:
+          SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
+
+      - name: Deploy application
+        run: ansible-playbook -i ./ansible/inventories/setup.yml ./ansible/playbook.yml
 ```
 
 Here is the result : 
 
-
+![alt text](./images/resultAnsible.png)
 
 It's working !!
